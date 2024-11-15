@@ -1,0 +1,44 @@
+{
+  "songs": [
+    {
+      "id": 1,
+      "artist": "Dream Theatre",
+      "songName": "Space-Dye Vest",
+      "genre": "Metal",
+      "releaseDate": "1994-01-01",
+      "songPhoto": "https://i.scdn.co/image/ab67616d0000b273fa54317f77c3a22574f8517d"
+    },
+    {
+      "id": 2,
+      "artist": "Demons And Wizards",
+      "songName": "Down Where I am",
+      "genre": "Metal",
+      "releaseDate": "2005-02-01",
+      "songPhoto": "https://i.scdn.co/image/ab67616d00001e02fc681d3c897f246d64033d8a"
+    },
+    {
+      "id": 3,
+      "artist": "Dark Tranquility",
+      "songName": "Lethe",
+      "genre": "Metal",
+      "releaseDate": "1995-01-01",
+      "songPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPqwuODFDtX5bG93j19DabUGrIu9P4JsH0rg&s"
+    },
+    {
+      "id": 4,
+      "artist": "Muse",
+      "songName": "The Resistance",
+      "genre": "Metal",
+      "releaseDate": "2009-01-01",
+      "songPhoto": "https://data.opus3a.com/product_photo/8c/8c3526d4d28b9199526c8bb2c9fe1666/MAX/0a21e0256a2e8d965d1cf09afdf4b634.jpg"
+    },
+    {
+      "id": 5,
+      "artist": "Muse",
+      "songName": "Madness",
+      "genre": "Metal",
+      "releaseDate": "2012-01-01",
+      "songPhoto": "https://m.media-amazon.com/images/I/81wXKHBRXJL._UF1000,1000_QL80_.jpg"
+    }
+  ]
+}
