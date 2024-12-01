@@ -3,42 +3,202 @@
     {
       "id": 1,
       "artist": "Dream Theatre",
-      "songName": "Space-Dye Vest",
+      "song": "Space Dye Vest",
       "genre": "Metal",
       "releaseDate": "1994-01-01",
-      "songPhoto": "https://i.scdn.co/image/ab67616d0000b273fa54317f77c3a22574f8517d"
+      "songPhoto": "https://i.scdn.co/image/ab67616d0000b273fa54317f77c3a22574f8517d",
+      "url": "/music/Space-Dye Vest.mp3",
+      "duration": "07:29"
     },
     {
       "id": 2,
       "artist": "Demons And Wizards",
-      "songName": "Down Where I am",
+      "song": "Down Where I am",
       "genre": "Metal",
       "releaseDate": "2005-02-01",
-      "songPhoto": "https://i.scdn.co/image/ab67616d00001e02fc681d3c897f246d64033d8a"
+      "songPhoto": "https://i.scdn.co/image/ab67616d00001e02fc681d3c897f246d64033d8a",
+      "url": "/music/Down Where I Am (Remaster 2019).mp3",
+      "duration": "04:54"
     },
     {
       "id": 3,
       "artist": "Dark Tranquility",
-      "songName": "Lethe",
+      "song": "Lethe",
       "genre": "Metal",
       "releaseDate": "1995-01-01",
-      "songPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPqwuODFDtX5bG93j19DabUGrIu9P4JsH0rg&s"
+      "songPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPqwuODFDtX5bG93j19DabUGrIu9P4JsH0rg&s",
+      "url": "/music/Lethe.mp3",
+      "duration": "04:42"
     },
     {
       "id": 4,
       "artist": "Muse",
-      "songName": "The Resistance",
+      "song": "The Resistance",
       "genre": "Metal",
       "releaseDate": "2009-01-01",
-      "songPhoto": "https://data.opus3a.com/product_photo/8c/8c3526d4d28b9199526c8bb2c9fe1666/MAX/0a21e0256a2e8d965d1cf09afdf4b634.jpg"
+      "songPhoto": "https://data.opus3a.com/product_photo/8c/8c3526d4d28b9199526c8bb2c9fe1666/MAX/0a21e0256a2e8d965d1cf09afdf4b634.jpg",
+      "url": "/music/Muse - Resistance [HD].mp3",
+      "duration": "05:46"
     },
     {
       "id": 5,
       "artist": "Muse",
-      "songName": "Madness",
+      "song": "Madness",
       "genre": "Metal",
       "releaseDate": "2012-01-01",
-      "songPhoto": "https://m.media-amazon.com/images/I/81wXKHBRXJL._UF1000,1000_QL80_.jpg"
+      "songPhoto": "https://m.media-amazon.com/images/I/81wXKHBRXJL._UF1000,1000_QL80_.jpg",
+      "url": "/music/Muse - Madness (Lyric Video).mp3",
+      "duration": "04:40"
+    },
+    {
+      "id": 6,
+      "artist": "Opeth",
+      "song": "Blackwater Park",
+      "genre": "Metal",
+      "releaseDate": "2001-03-01",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/8/8b/Opeth_-_Blackwater_Park.jpg",
+      "url": "/music/Opeth - Blackwater Park.mp3",
+      "duration": "12:08"
+    },
+    {
+      "id": 7,
+      "artist": "Megadeth",
+      "song": "Symphony of Destruction",
+      "genre": "Metal",
+      "releaseDate": "1992-09-14",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/3/30/Megadeth_-_Symphony_of_Destruction.jpg",
+      "url": "/music/Megadeth - Symphony of Destruction.mp3",
+      "duration": "04:04"
+    },
+    {
+      "id": 8,
+      "artist": "Pantera",
+      "song": "Walk",
+      "genre": "Metal",
+      "releaseDate": "1992-05-15",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/2/2c/Pantera_-_Walk.jpg",
+      "url": "/music/Pantera - Walk.mp3",
+      "duration": "05:00"
+    },
+    {
+      "id": 9,
+      "artist": "Metallica",
+      "song": "Enter Sandman",
+      "genre": "Metal",
+      "releaseDate": "1991-07-29",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/8/8b/Metallica_-_Enter_Sandman.jpg",
+      "url": "/music/Metallica - Enter Sandman.mp3",
+      "duration": "05:31"
+    },
+    {
+      "id": 10,
+      "artist": "Iron Maiden",
+      "song": "Hallowed Be Thy Name",
+      "genre": "Metal",
+      "releaseDate": "1982-04-02",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/5/5a/Iron_Maiden_-_Hallowed_Be_Thy_Name.jpg",
+      "url": "/music/Iron Maiden - Hallowed Be Thy Name.mp3",
+      "duration": "07:12"
+    },
+    {
+      "id": 11,
+      "artist": "Black Sabbath",
+      "song": "Paranoid",
+      "genre": "Metal",
+      "releaseDate": "1970-01-01",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/6/62/Black_Sabbath_-_Paranoid.jpg",
+      "url": "/music/Black Sabbath - Paranoid.mp3",
+      "duration": "02:48"
+    },
+    {
+      "id": 12,
+      "artist": "Judas Priest",
+      "song": "Breaking the Law",
+      "genre": "Metal",
+      "releaseDate": "1980-01-01",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/a/a3/Judas_Priest_-_Breaking_the_Law.jpg",
+      "url": "/music/Judas Priest - Breaking the Law.mp3",
+      "duration": "02:44"
+    },
+    {
+      "id": 13,
+      "artist": "Slipknot",
+      "song": "Psychosocial",
+      "genre": "Metal",
+      "releaseDate": "2008-08-26",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/6/66/Slipknot_-_Psychosocial.jpg",
+      "url": "/music/Slipknot - Psychosocial.mp3",
+      "duration": "04:44"
+    },
+    {
+      "id": 14,
+      "artist": "Alice in Chains",
+      "song": "Man in the Box",
+      "genre": "Metal",
+      "releaseDate": "1990-08-21",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/3/30/Alice_in_Chains_-_Man_in_the_Box.jpg",
+      "url": "/music/Alice in Chains - Man in the Box.mp3",
+      "duration": "04:45"
+    },
+    {
+      "id": 15,
+      "artist": "Tool",
+      "song": "Schism",
+      "genre": "Metal",
+      "releaseDate": "2001-04-17",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/d/dd/Tool_-_Schism.jpg",
+      "url": "/music/Tool - Schism.mp3",
+      "duration": "06:47"
+    },
+    {
+      "id": 16,
+      "artist": "Nightwish",
+      "song": "Nemo",
+      "genre": "Metal",
+      "releaseDate": "2004-05-05",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/8/8a/Nightwish_-_Nemo.jpg",
+      "url": "/music/Nightwish - Nemo.mp3",
+      "duration": "04:30"
+    },
+    {
+      "id": 17,
+      "artist": "Kreator",
+      "song": "Phantom Antichrist",
+      "genre": "Metal",
+      "releaseDate": "2012-06-01",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/5/58/Kreator_-_Phantom_Antichrist.jpg",
+      "url": "/music/Kreator - Phantom Antichrist.mp3",
+      "duration": "07:54"
+    },
+    {
+      "id": 18,
+      "artist": "Amon Amarth",
+      "song": "Guardians of Asgard",
+      "genre": "Metal",
+      "releaseDate": "2008-03-01",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/1/13/Amon_Amarth_-_Guardians_of_Asgard.jpg",
+      "url": "/music/Amon Amarth - Guardians of Asgard.mp3",
+      "duration": "05:33"
+    },
+    {
+      "id": 19,
+      "artist": "Ghost",
+      "song": "Square Hammer",
+      "genre": "Metal",
+      "releaseDate": "2016-09-30",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/4/44/Ghost_-_Square_Hammer.jpg",
+      "url": "/music/Ghost - Square Hammer.mp3",
+      "duration": "04:00"
+    },
+    {
+      "id": 20,
+      "artist": "Behemoth",
+      "song": "Conquer All",
+      "genre": "Metal",
+      "releaseDate": "2005-05-10",
+      "songPhoto": "https://upload.wikimedia.org/wikipedia/en/c/cf/Behemoth_-_Conquer_All.jpg",
+      "url": "/music/Behemoth - Conquer All.mp3",
+      "duration": "05:08"
     }
   ]
 }
