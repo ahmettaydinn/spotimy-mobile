@@ -8,43 +8,46 @@ const Songs = () => {
   useEffect(() => {
     const reference = database().ref("/songs"); // songs path'i
 
-
-console.log("Reference: ", database().ref("/songs"));
+    console.log("Reference: ", database().ref("/songs"));
 
     // Veriyi dinle
     const onValueChange = reference.on("value", (snapshot) => {
       const data = snapshot.val(); // snapshot'tan veri alın
+
       if (data) {
-        const songList = Object.values(data); // Objeyi diziye çevir
-        setSongs(songList);
+        // const songList = Object.values(data); // Objeyi diziye çevir
+        setSongs(data);
       }
     });
 
     // Component unmount olduğunda dinleyiciyi kaldır
     return () => reference.off("value", onValueChange);
   }, []);
-  console.log("Firebase URL: ", database().ref().toString());
+  // console.log("Firebase URL: ", database().ref().toString());
 
- 
+  const renderItem = ({ item }) => {
+    console.log("item", item);
+    return (
+      <View style={styles.item}>
+        <Image source={{ uri: item.songPhoto }} style={styles.image} />
+        <View style={styles.details}>
+          <Text style={styles.title}>{item.song}</Text>
+          <Text style={styles.subtitle}>{item.artist}</Text>
+          <Text style={styles.info}>Genre: {item.genre}</Text>
+          <Text style={styles.info}>Duration: {item.duration}</Text>
+          <Text style={styles.info}>Release Date: {item.releaseDate}</Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Song List</Text>
       <FlatList
         data={songs}
-        keyExtractor={(item, index) => index.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Image source={{ uri: item.songPhoto }} style={styles.image} />
-            <View style={styles.details}>
-              <Text style={styles.title}>{item.song}</Text>
-              <Text style={styles.subtitle}>{item.artist}</Text>
-              <Text style={styles.info}>Genre: {item.genre}</Text>
-              <Text style={styles.info}>Duration: {item.duration}</Text>
-              <Text style={styles.info}>Release Date: {item.releaseDate}</Text>
-            </View>
-          </View>
-        )}
+        keyExtractor={(item, index) => item.id.toString()}
+        renderItem={renderItem}
       />
     </View>
   );

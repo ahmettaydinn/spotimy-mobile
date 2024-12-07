@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>540860964922-n0q9iipak0p3tudb2ov4lbu1bn974si0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.540860964922-n0q9iipak0p3tudb2ov4lbu1bn974si0</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDXvUmMcN54SsKwGYcKxZQQBoE9tAdqd3s</string>
 	<key>GCM_SENDER_ID</key>
@@ -26,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:540860964922:ios:91fc8d57c7fc36890c5503</string>
+	<key>DATABASE_URL</key>
+	<string>https://spotimy-mobile-78e3f-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>
