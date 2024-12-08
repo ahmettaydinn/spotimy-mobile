@@ -1,59 +1,99 @@
-import React from "react";
-import { Text, View, FlatList, Image, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import useFetchSongs from "../components/hooks/UseFetchSongs";
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet, Image } from "react-native";
+import database from "@react-native-firebase/database";
 
-export default function Songs() {
-  const navigation = useNavigation();
-  const songs = useFetchSongs("http://192.168.1.101:3000/songs");
+const Songs = () => {
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    const reference = database().ref("/songs"); // songs path'i
+
+    console.log("Reference: ", database().ref("/songs"));
+
+    // Veriyi dinle
+    const onValueChange = reference.on("value", (snapshot) => {
+      const data = snapshot.val(); // snapshot'tan veri alın
+
+      if (data) {
+        // const songList = Object.values(data); // Objeyi diziye çevir
+        setSongs(data);
+      }
+    });
+
+    // Component unmount olduğunda dinleyiciyi kaldır
+    return () => reference.off("value", onValueChange);
+  }, []);
+  // console.log("Firebase URL: ", database().ref().toString());
+
+  const renderItem = ({ item }) => {
+    console.log("item", item);
+    return (
+      <View style={styles.item}>
+        <Image source={{ uri: item.songPhoto }} style={styles.image} />
+        <View style={styles.details}>
+          <Text style={styles.title}>{item.song}</Text>
+          <Text style={styles.subtitle}>{item.artist}</Text>
+          <Text style={styles.info}>Genre: {item.genre}</Text>
+          <Text style={styles.info}>Duration: {item.duration}</Text>
+          <Text style={styles.info}>Release Date: {item.releaseDate}</Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Text>Songs</Text>
+      <Text style={styles.header}>Song List</Text>
       <FlatList
         data={songs}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.songContainer}>
-            <Image source={{ uri: item.songPhoto }} style={styles.songPhoto} />
-            <View>
-              <Text
-                style={styles.songName}
-                onPress={() => navigation.navigate("Details", { item })}
-              >{`${item.artist} - ${item.songName}`}</Text>
-            </View>
-          </View>
-        )}
+        keyExtractor={(item, index) => item.id.toString()}
+        renderItem={renderItem}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#f9f9f9",
   },
-  songContainer: {
-    flexDirection: "column",
-    marginBottom: 15,
-  },
-  songPhoto: {
-    width: 60,
-    height: 60,
-    marginRight: 10,
-  },
-  songName: {
-    fontSize: 16,
+  header: {
+    fontSize: 24,
     fontWeight: "bold",
+    marginBottom: 20,
   },
-  songGenre: {
+  item: {
+    flexDirection: "row",
+    marginBottom: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    overflow: "hidden",
+    elevation: 3,
+  },
+  image: {
+    width: 100,
+    height: 100,
+  },
+  details: {
+    flex: 1,
+    padding: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  subtitle: {
     fontSize: 14,
-    color: "gray",
+    color: "#666",
+    marginBottom: 5,
   },
-  releaseDate: {
+  info: {
     fontSize: 12,
-    color: "darkgray",
+    color: "#888",
   },
 });
+
+export default Songs;
