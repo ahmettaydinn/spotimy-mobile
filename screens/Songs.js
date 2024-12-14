@@ -1,32 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
-import database from "@react-native-firebase/database";
+import React, { useContext } from "react";
+import { View, Text, FlatList, StyleSheet, Image, Button } from "react-native";
+import { SongsContext } from "../components/context/SongsProvider";   // Import the context
 
-const Songs = () => {
-  const [songs, setSongs] = useState([]);
+const Songs = ({ navigation }) => {
+  const { songs } = useContext(SongsContext);  // Access songs from the context
 
-  useEffect(() => {
-    const reference = database().ref("/songs"); // songs path'i
-
-    console.log("Reference: ", database().ref("/songs"));
-
-    // Veriyi dinle
-    const onValueChange = reference.on("value", (snapshot) => {
-      const data = snapshot.val(); // snapshot'tan veri alın
-
-      if (data) {
-        // const songList = Object.values(data); // Objeyi diziye çevir
-        setSongs(data);
-      }
-    });
-
-    // Component unmount olduğunda dinleyiciyi kaldır
-    return () => reference.off("value", onValueChange);
-  }, []);
-  // console.log("Firebase URL: ", database().ref().toString());
+  const logout = () => {
+    navigation.replace('Login');
+  }
 
   const renderItem = ({ item }) => {
-    console.log("item", item);
     return (
       <View style={styles.item}>
         <Image source={{ uri: item.songPhoto }} style={styles.image} />
@@ -49,6 +32,7 @@ const Songs = () => {
         keyExtractor={(item, index) => item.id.toString()}
         renderItem={renderItem}
       />
+      <Button title="Log out" onPress={logout} />
     </View>
   );
 };
@@ -56,44 +40,54 @@ const Songs = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f8f8f8",
     padding: 10,
-    backgroundColor: "#f9f9f9",
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 10,
   },
   item: {
     flexDirection: "row",
-    marginBottom: 20,
     backgroundColor: "#fff",
     borderRadius: 10,
-    overflow: "hidden",
+    marginBottom: 10,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 3,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    marginRight: 10,
   },
   details: {
     flex: 1,
-    padding: 10,
+    justifyContent: "center",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 5,
+    color: "#333",
   },
   subtitle: {
     fontSize: 14,
     color: "#666",
-    marginBottom: 5,
+    marginTop: 5,
   },
   info: {
     fontSize: 12,
-    color: "#888",
+    color: "#999",
+    marginTop: 3,
   },
 });
 
-export default Songs;
+
+export default Songs

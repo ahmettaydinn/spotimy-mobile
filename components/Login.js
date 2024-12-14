@@ -79,7 +79,7 @@ const MyForm = () => {
       const user = userCredential.user;
       console.log(user);
       setIsAuthenticated(true);
-      navigation.navigate("Songs");
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error.code, error.message);
       setErrorMessage(error.message); // Set error message
