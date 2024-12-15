@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -6,6 +6,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "@react-native-firebase/auth";
 import { useNavigation } from "@react-navigation/native"; 
 
@@ -48,6 +49,20 @@ const MyForm = () => {
   const [isLoading, setIsLoading] = useState(false); // Track loading state
   const [errorMessage, setErrorMessage] = useState(""); // Track error message
   const navigation = useNavigation(); 
+
+  useEffect(() => {
+    // Firebase Authentication state değişikliklerini izleyin
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true); // Kullanıcı giriş yaptı
+        navigation.navigate("Home"); // Giriş yaptıktan sonra ana sayfaya yönlendirin
+      } else {
+        setIsAuthenticated(false); // Kullanıcı çıkış yaptı
+      }
+    });
+
+    return unsubscribe; // Temizleme işlemi
+  }, [navigation]);
 
   const onSubmit = async (values) => {
     setIsLoading(true); // Start loading
