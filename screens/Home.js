@@ -1,5 +1,12 @@
 import React, { useState, useRef, useContext } from "react";
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
@@ -7,10 +14,22 @@ import { SongsContext } from "../components/context/SongsProvider";
 
 const width = Dimensions.get("window").width;
 
-const Home = () => {
+const musicGenres = [
+  { title: "Rock", color: "#FFB6B6" },
+  { title: "Pop", color: "#B6FFB6" },
+  { title: "Jazz", color: "#B6C6FF" },
+  { title: "Classical", color: "#FFD1FF" },
+  { title: "Hip Hop", color: "#FFEBB6" },
+  { title: "Electronic", color: "#B6F0FF" },
+  { title: "Metal", color: "#D1D1D1" },
+];
+
+const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const progress = useSharedValue(0);
-  const ref = useRef(null);
+  const refMiddle = useRef(null);
+  const refSmall = useRef(null);
+  const refSmaller = useRef(null);
   const { songs } = useContext(SongsContext);
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -19,6 +38,10 @@ const Home = () => {
     if (ref.current) {
       ref.current.scrollTo({ index, animated: true });
     }
+  };
+
+  const handlePress = () => {
+    console.log("Button Pressed!");
   };
 
   return (
@@ -32,116 +55,93 @@ const Home = () => {
         style={styles.searchbar}
       />
 
-      <View style={{ flex: 1 }}>
+      <View style={styles.carouselContainer}>
         <Carousel
-          ref={ref}
-          width={width - 110}
-          height={width / 2}
+          ref={refMiddle}
+          width={width - 160}
+          height={160}
           data={songs}
           loop={true}
           pagingEnabled={true}
-          style={styles.carousel}
-          onProgressChange={(offsetProgress) => {
-            progress.value = offsetProgress;
+          mode="parallax"
+          modeConfig={{
+            parallaxScrollingScale: 1, // Kenardaki öğelerin boyut farkını sıfırla
+            parallaxScrollingOffset: 0, // Kayma uzaklığını sıfırla
+            parallaxAdjacentItemScale: 0.9, // Yanlardaki öğeleri biraz küçült
           }}
+          style={styles.carousel}
           renderItem={({ index }) => (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 20,
-                width: width - 80,
-              }}
-            >
+            <View style={styles.imageContainer}>
               <Image
                 source={{ uri: songs[index].songPhoto }}
-                style={{
-                  width: width - 150,
-                  height: width / 2 - 40,
-                  borderRadius: 10,
-                  resizeMode: "cover",
-                }}
+                style={styles.image}
               />
-              <Text style={styles.carouselText}>{songs[index].artist}</Text>
+              <View style={styles.overlay}>
+                <Text style={styles.artistName}>{songs[index].artist}</Text>
+                <Text style={styles.songName}>{songs[index].song}</Text>
+              </View>
             </View>
           )}
         />
       </View>
 
-      <View style={{ flex: 1, marginTop: 80 }}>
+      <View style={styles.carouselContainer}>
+        <Text style={styles.carouselLabel}>Albums</Text>
         <Carousel
-          ref={ref}
-          width={width - 230}
-          height={width / 2}
+          ref={refSmall}
+          width={width * 0.44}
+          height={160}
           data={songs}
           loop={true}
           pagingEnabled={true}
           style={styles.carousel}
-          onProgressChange={(offsetProgress) => {
-            progress.value = offsetProgress;
-          }}
           renderItem={({ index }) => (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 20,
-                width: 150,
-              }}
-            >
+            <View style={styles.carouselItem}>
               <Image
                 source={{ uri: songs[index].songPhoto }}
-                style={{
-                  width: 150,
-                  height: 150,
-                  borderRadius: 10,
-                  resizeMode: "cover",
-                }}
+                style={{ width: 160, height: 120, borderRadius: 20 }}
               />
-              <Text style={styles.carouselText}>{songs[index].artist}</Text>
+              <Text style={styles.artistName}>{songs[index].artist}</Text>
             </View>
           )}
         />
       </View>
 
-      <View style={{flex: 1, marginTop: 80 }}>
+      <View style={styles.carouselContainer}>
+        <Text style={styles.carouselLabel}>Playlists</Text>
         <Carousel
-          ref={ref}
-          width={width - 280}
-          height={width / 2}
-          data={songs}
+          ref={refSmaller}
+          width={width * 0.32}
+          height={160}
+          data={musicGenres}
           loop={true}
           pagingEnabled={true}
-          style={styles.carousel}
-          onProgressChange={(offsetProgress) => {
-            progress.value = offsetProgress;
-          }}
-          renderItem={({ index }) => (
+          style={[styles.carousel, styles.shadowEffect]}
+          renderItem={({ item, index }) => (
             <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 20,
-                width: 100,
-              }}
-            >
-              <Image
-                source={{ uri: songs[index].songPhoto }}
-                style={{
-                  width: 100,
+              style={[
+                styles.carouselItem,
+                {
+                  backgroundColor: item.color,
+                  transform: [{ scale: 0.9 }],
+                  width: 120,
                   height: 100,
-                  borderRadius: 10,
-                  resizeMode: "cover",
-                }}
-              />
-              <Text style={styles.carouselText}>{songs[index].artist}</Text>
+                  borderRadius: 20,
+                },
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() =>
+                  item.title === "Metal" && navigation.navigate("Songs")
+                }
+              >
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
             </View>
           )}
         />
       </View>
+
       <View style={styles.emptyBox}></View>
     </View>
   );
@@ -152,6 +152,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#121212",
+  },
+  carouselContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 200,
   },
   title: {
     fontSize: 32,
@@ -167,26 +173,69 @@ const styles = StyleSheet.create({
   carousel: {
     overflow: "visible",
   },
-  albumContainer: {
-    marginTop: 60,
-    marginBottom: 20,
-    flex: 1,
-  },
-  albumTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  carouselText: {
-    textAlign: "center",
-    fontSize: 15,
-    color: "#fff",
-    marginTop: 10,
+  image: {
+    height: 150,
+    width: 250,
+    borderRadius: 10,
+    resizeMode: "cover",
   },
   emptyBox: {
     flex: 1,
+  },
+  carouselLabel: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 10,
+    textAlign: "left",
+    width: "100%",
+  },
+  carouselItem: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  artistName: {
+    color: "#fff",
+    marginTop: 5,
+    textAlign: "center",
+  },
+  imageContainer: {
+    overflow: "hidden", // Resmin yuvarlak hatları için
+    position: "relative", // Gölgeyi ve metni yerleştirmek için
+  },
+  overlay: {
+    position: "absolute", // Fotoğrafın üzerine yerleştirmek için
+    bottom: 10, // Alt kısıma yaklaşık konumlandırma
+    left: 10, // Soldan 10 birim
+    right: 10, // Sağdan 10 birim
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Siyah transparan arka plan
+    borderRadius: 10,
+    padding: 5, // Metni etrafında biraz boşluk bırakmak için
+  },
+  artistName: {
+    fontSize: 14,
+    color: "#fff",
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+
+  songName: {
+    fontSize: 12,
+    color: "#fff", // Beyaz metin rengi
+  },
+  shadowEffect: {
+    shadowColor: "#000", // Siyah gölge rengi
+    shadowOffset: {
+      width: 15, // Yatayda sağa kaydırıyoruz
+      height: 0, // Dikeyde kayma olmaması için
+    },
+    shadowOpacity: 0.2, // Gölgenin opaklık seviyesi
+    shadowRadius: 15, // Gölgenin yayılma mesafesi arttırıldı
+    elevation: 10, // Android için elevasyon ekliyoruz
+  },
+  button: {
+    padding: 20,
+    borderRadius: 10,
   },
 });
 
