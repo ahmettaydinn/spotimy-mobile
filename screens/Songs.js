@@ -4,12 +4,12 @@ import {
   Text,
   StyleSheet,
   Image,
-  Button,
-  Dimensions,
   TouchableOpacity,
   SafeAreaView,
   BackHandler,
   Alert,
+  Dimensions,
+  Button
 } from "react-native";
 import { SongsContext } from "../components/context/SongsProvider";
 import { FlashList } from "@shopify/flash-list";
@@ -20,11 +20,13 @@ const width = Dimensions.get("window").width;
 
 const Songs = ({ navigation }) => {
   const { songs } = useContext(SongsContext);
-  const [currentSong, setCurrentSong] = useState(songs[0]);
+  const [currentSong, setCurrentSong] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [songID, setSongID] = useState("");
+  const [filteredSongs, setFilteredSongs] = useState(songs);
 
-  const onChangeSearch = (query) => setSearchQuery(query);
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+  };
 
   // Donanımsal geri tuşunu devre dışı bırakma
   useEffect(() => {
@@ -43,44 +45,63 @@ const Songs = ({ navigation }) => {
     return () => backHandler.remove(); // Temizlik
   }, []);
 
+  // Filtreleme işlemi
+  useEffect(() => {
+    if (songs.length > 0) {
+      setCurrentSong(songs[0]); // İlk şarkıyı seç
+      setFilteredSongs(
+        songs.filter((song) =>
+          song.song.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  }, [songs, searchQuery]);
+
   const logout = () => {
-    navigation.replace("Login");
+    navigation.navigate("Login");
   };
 
+  // Şarkıya tıklanıldığında şarkıyı güncelleme
   const handleSongPress = (song) => {
-    navigation.navigate("SongDetails", { song }); // Şarkıyı detay sayfasına yönlendir
+    setCurrentSong(song); // Şarkıyı günceller
   };
 
-  const renderItem = ({ item }) => {
-    return (
-      <TouchableOpacity onPress={() => handleSongPress(item)}>
-        <View style={styles.item}>
-          <View>
-            <Text style={styles.id}>{item.id}</Text>
-          </View>
-          <Image source={{ uri: item.songPhoto }} style={styles.image} />
-          <View style={styles.details}>
-            <Text style={styles.title}>{item.song}</Text>
-            <Text style={styles.subtitle}>{item.artist}</Text>
-          </View>
-          <Icon name="more-vert" size={30} color="white" style={styles.icon} />
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleSongPress(item)}>
+      <View style={styles.item}>
+        <View>
+          <Text style={styles.id}>{item.id}</Text>
         </View>
-      </TouchableOpacity>
-    );
-  };
+        <Image source={{ uri: item.songPhoto }} style={styles.image} />
+        <View style={styles.details}>
+          <Text style={styles.title}>{item.song}</Text>
+          <Text style={styles.subtitle}>{item.artist}</Text>
+        </View>
+        <Icon name="more-vert" size={30} color="white" style={styles.icon} />
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ position: "relative" }}>
-        <Image
-          source={{ uri: currentSong.songPhoto }}
-          style={{ width: width, height: 400, borderRadius: 10 }}
-        />
-      </View>
-      <View style={styles.overlay}>
-        <Text>{currentSong.song}</Text>
-        <Text>{currentSong.artist}</Text>
-      </View>
+      {currentSong && (
+        <View style={styles.mainImage}>
+          <Image
+            source={{ uri: currentSong.songPhoto }}
+            style={{ width: width, height: 400, borderRadius: 10 }}
+          />
+        </View>
+      )}
+      {currentSong && (
+        <View style={styles.overlay}>
+          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+            {currentSong.song}
+          </Text>
+          <Text style={{ color: "white", fontSize: 14 }}>
+            {currentSong.artist}
+          </Text>
+        </View>
+      )}
       <Searchbar
         placeholder="Search"
         placeholderTextColor="white"
@@ -89,8 +110,8 @@ const Songs = ({ navigation }) => {
         style={styles.searchbar}
       />
       <FlashList
-        data={songs}
-        keyExtractor={(item, index) => item.id.toString()}
+        data={filteredSongs}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         estimatedItemSize={70} // Ortalama yükseklik
       />
@@ -103,14 +124,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
-    padding: 10,
+    padding: 0
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-    textAlign: "center",
-    marginBottom: 10,
+  mainImage: {
+    position: "relative",
+    width: "100%", // Full width of the screen
+    height: 400, // Fixed height for the image
+    overflow: "hidden", // Taşmayı engelle
+  },
+  overlay: {
+    position: "absolute", // Fotoğrafın üzerine yerleştirmek için
+    top: 20, // Üstten 20 birim
+    left: 10, // Soldan 10 birim
+    right: 10, // Sağdan 10 birim
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Siyah transparan arka plan
+    borderRadius: 10,
+    padding: 5, // Metni etrafında biraz boşluk bırakmak için
+    zIndex: 10, // Üstte görünmesi için zIndex
+  },
+  searchbar: {
+    marginBottom: 20,
+    borderRadius: 8,
+    backgroundColor: "black",
+    color: "white",
   },
   item: {
     flexDirection: "row",
@@ -132,29 +168,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
   },
-  overlay: {
-    position: "absolute", // Fotoğrafın üzerine yerleştirmek için
-    bottom: 10, // Alt kısıma yaklaşık konumlandırma
-    left: 10, // Soldan 10 birim
-    right: 10, // Sağdan 10 birim
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Siyah transparan arka plan
-    borderRadius: 10,
-    padding: 5, // Metni etrafında biraz boşluk bırakmak için
-  },
-  searchbar: {
-    marginBottom: 20,
-    borderRadius: 8,
-    backgroundColor: "black",
-    color: "white",
-  },
   details: {
     flex: 1,
     justifyContent: "center",
   },
   id: {
-    fontSize: 16, // Yazı boyutu
-    color: "white", // Yazı rengi
-    textAlign: "center", // Metni ortalama
+    fontSize: 16, 
+    color: "white", 
+    textAlign: "center", 
     paddingRight: 10,
   },
   title: {
@@ -171,6 +192,19 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginLeft: 10,
   },
+  logoutButton: {
+    position: "absolute",
+    bottom: 20,
+    left: "50%",
+    transform: [{ translateX: -50 }],
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+  },
+  logoutText: {
+    color: "white",
+    fontSize: 16,
+  }
 });
 
 export default Songs;
