@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react"
 import {
   View,
   Text,
@@ -9,62 +9,62 @@ import {
   BackHandler,
   Alert,
   Dimensions,
-  Button
-} from "react-native";
-import { SongsContext } from "../components/context/SongsProvider";
-import { FlashList } from "@shopify/flash-list";
-import { Searchbar } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialIcons";
+  Button,
+} from "react-native"
+import { SongsContext } from "../components/context/SongsProvider"
+import { FlashList } from "@shopify/flash-list"
+import { Searchbar } from "react-native-paper"
+import Icon from "react-native-vector-icons/MaterialIcons"
+import { useAudio } from "../components/context/AudioContext"
 
-const width = Dimensions.get("window").width;
+const width = Dimensions.get("window").width
 
 const Songs = ({ navigation }) => {
-  const { songs } = useContext(SongsContext);
-  const [currentSong, setCurrentSong] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredSongs, setFilteredSongs] = useState(songs);
+  const { songs } = useContext(SongsContext)
+  const { isPlaying, togglePlay, currentArtist, currentSong, currentCountdown } = useAudio()
+  const [currentSongList, setCurrentSongList] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [filteredSongs, setFilteredSongs] = useState(songs)
 
   const onChangeSearch = (query) => {
-    setSearchQuery(query);
-  };
+    setSearchQuery(query)
+  }
 
-  // Donanımsal geri tuşunu devre dışı bırakma
   useEffect(() => {
     const backAction = () => {
       Alert.alert("Uyarı", "Geri tuşu devre dışı bırakıldı!", [
         { text: "Tamam" },
-      ]);
-      return true; // Hiçbir işlem yapılmaz.
-    };
+      ])
+      return true
+    }
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       backAction
-    );
+    )
 
-    return () => backHandler.remove(); // Temizlik
-  }, []);
+    return () => backHandler.remove()
+  }, [])
 
-  // Filtreleme işlemi
   useEffect(() => {
     if (songs.length > 0) {
-      setCurrentSong(songs[0]); // İlk şarkıyı seç
+      setCurrentSong(songs[0])
       setFilteredSongs(
         songs.filter((song) =>
           song.song.toLowerCase().includes(searchQuery.toLowerCase())
         )
-      );
+      )
     }
-  }, [songs, searchQuery]);
+  }, [songs, searchQuery])
 
   const logout = () => {
-    navigation.navigate("Login");
-  };
+    navigation.navigate("Login")
+  }
 
-  // Şarkıya tıklanıldığında şarkıyı güncelleme
   const handleSongPress = (song) => {
-    setCurrentSong(song); // Şarkıyı günceller
-  };
+    setCurrentSongList(song)
+    togglePlay(song.songUrl, song.artist, song.song, song.duration) // Şarkı tıklanınca çalmaya başla
+  }
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSongPress(item)}>
@@ -80,7 +80,7 @@ const Songs = ({ navigation }) => {
         <Icon name="more-vert" size={30} color="white" style={styles.icon} />
       </View>
     </TouchableOpacity>
-  );
+  )
 
   return (
     <SafeAreaView style={styles.container}>
@@ -113,34 +113,33 @@ const Songs = ({ navigation }) => {
         data={filteredSongs}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
-        estimatedItemSize={70} // Ortalama yükseklik
+        estimatedItemSize={70}
       />
-      <Button title="Log out" onPress={logout} />
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
-    padding: 0
+    padding: 0,
   },
   mainImage: {
     position: "relative",
-    width: "100%", // Full width of the screen
-    height: 400, // Fixed height for the image
-    overflow: "hidden", // Taşmayı engelle
+    width: "100%",
+    height: 400,
+    overflow: "hidden",
   },
   overlay: {
-    position: "absolute", // Fotoğrafın üzerine yerleştirmek için
-    top: 20, // Üstten 20 birim
-    left: 10, // Soldan 10 birim
-    right: 10, // Sağdan 10 birim
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Siyah transparan arka plan
+    position: "absolute",
+    top: 20,
+    left: 10,
+    right: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 10,
-    padding: 5, // Metni etrafında biraz boşluk bırakmak için
-    zIndex: 10, // Üstte görünmesi için zIndex
+    padding: 5,
+    zIndex: 10,
   },
   searchbar: {
     marginBottom: 20,
@@ -173,9 +172,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   id: {
-    fontSize: 16, 
-    color: "white", 
-    textAlign: "center", 
+    fontSize: 16,
+    color: "white",
+    textAlign: "center",
     paddingRight: 10,
   },
   title: {
@@ -201,10 +200,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
-  logoutText: {
-    color: "white",
-    fontSize: 16,
-  }
-});
+})
 
-export default Songs;
+export default Songs

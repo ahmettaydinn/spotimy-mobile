@@ -4656,6 +4656,11 @@ expo-asset@~10.0.10:
     invariant "^2.2.4"
     md5-file "^3.2.3"
 
+expo-av@^15.0.1:
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-15.0.1.tgz#c337f831c2e29174de7117c37d2f92c1275bb4c4"
+  integrity sha512-2d4j7RTH9Y5nI1FoC0woRjqnj5G8sF0al2iW6kG21PPs/CgS4QARbHxMrPxKpUXrC6iu+6EMj2h5H6T0nqteFg==
+
 expo-build-properties@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.13.1.tgz#e40645b34debed5eab53a273c89543aaef58bc57"
@@ -7962,6 +7967,11 @@ react-native-screens@^3.31.1:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-sound@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.2.tgz#e542dc5b9e16ab4b3ac7e6eaddb1fc8d98da9038"
+  integrity sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==
 
 react-native-vector-icons@^10.2.0:
   version "10.2.0"
