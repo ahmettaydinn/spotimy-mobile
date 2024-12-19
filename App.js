@@ -1,15 +1,15 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SongsProvider } from "./components/context/SongsProvider"; // Import the SongsProvider
-import { AudioProvider } from "./components/context/AudioContext";
-import Login from "./components/Login";
-import Songs from "./screens/Songs";
-import Home from "./screens/Home";
-import Details from "./screens/Details";
-import AudioFooter from "./components/AudioFooter";
+import React from "react"
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { SongsProvider } from "./components/context/SongsProvider"
+import { AudioProvider } from "./components/context/AudioContext"
+import Login from "./components/Login"
+import Songs from "./screens/Songs"
+import Home from "./screens/Home"
+import Details from "./screens/Details"
+import AudioFooter from "./components/AudioFooter"
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 export default function App() {
   return (
@@ -26,5 +26,5 @@ export default function App() {
         <AudioFooter />
       </SongsProvider>
     </AudioProvider>
-  );
+  )
 }

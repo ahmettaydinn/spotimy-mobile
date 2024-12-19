@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,61 +10,71 @@ import {
   Alert,
   Dimensions,
   Button,
-} from "react-native"
-import { SongsContext } from "../components/context/SongsProvider"
-import { FlashList } from "@shopify/flash-list"
-import { Searchbar } from "react-native-paper"
-import Icon from "react-native-vector-icons/MaterialIcons"
-import { useAudio } from "../components/context/AudioContext"
+} from "react-native";
+import { SongsContext } from "../components/context/SongsProvider";
+import { FlashList } from "@shopify/flash-list";
+import { Searchbar } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useAudio } from "../components/context/AudioContext";
 
-const width = Dimensions.get("window").width
+const width = Dimensions.get("window").width;
 
 const Songs = ({ navigation }) => {
-  const { songs } = useContext(SongsContext)
-  const { isPlaying, togglePlay, currentArtist, currentSong, currentCountdown } = useAudio()
-  const [currentSongList, setCurrentSongList] = useState(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filteredSongs, setFilteredSongs] = useState(songs)
+  const { songs } = useContext(SongsContext);
+  const {
+    isPlaying,
+    togglePlay,
+    currentArtist,
+    currentSong,
+    currentCountdown,
+  } = useAudio();
+  const [currentSongList, setCurrentSongList] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredSongs, setFilteredSongs] = useState(songs);
 
   const onChangeSearch = (query) => {
-    setSearchQuery(query)
-  }
+    setSearchQuery(query);
+  };
 
   useEffect(() => {
     const backAction = () => {
       Alert.alert("Uyarı", "Geri tuşu devre dışı bırakıldı!", [
         { text: "Tamam" },
-      ])
-      return true
-    }
+      ]);
+      return true;
+    };
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       backAction
-    )
+    );
 
-    return () => backHandler.remove()
-  }, [])
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     if (songs.length > 0) {
-      setCurrentSong(songs[0])
+      setCurrentSongList(songs[0]);
       setFilteredSongs(
         songs.filter((song) =>
           song.song.toLowerCase().includes(searchQuery.toLowerCase())
         )
-      )
+      );
     }
-  }, [songs, searchQuery])
+  }, [songs, searchQuery]);
 
   const logout = () => {
-    navigation.navigate("Login")
-  }
+    navigation.navigate("Login");
+  };
 
   const handleSongPress = (song) => {
-    setCurrentSongList(song)
-    togglePlay(song.songUrl, song.artist, song.song, song.duration) // Şarkı tıklanınca çalmaya başla
-  }
+    setCurrentSongList(song);
+     console.log(currentSongList);
+     togglePlay(song.url, song.artist, song.song, song.duration);
+  };
+
+   console.log("Audio file URL:", currentSongList
+   );
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSongPress(item)}>
@@ -80,25 +90,25 @@ const Songs = ({ navigation }) => {
         <Icon name="more-vert" size={30} color="white" style={styles.icon} />
       </View>
     </TouchableOpacity>
-  )
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      {currentSong && (
+      {currentSongList && (
         <View style={styles.mainImage}>
           <Image
-            source={{ uri: currentSong.songPhoto }}
+            source={{ uri: currentSongList.songPhoto }}
             style={{ width: width, height: 400, borderRadius: 10 }}
           />
         </View>
       )}
-      {currentSong && (
+      {currentSongList && (
         <View style={styles.overlay}>
           <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-            {currentSong.song}
+            {currentSongList.song}
           </Text>
           <Text style={{ color: "white", fontSize: 14 }}>
-            {currentSong.artist}
+            {currentSongList.artist}
           </Text>
         </View>
       )}
@@ -116,8 +126,8 @@ const Songs = ({ navigation }) => {
         estimatedItemSize={70}
       />
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -200,6 +210,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
-})
+});
 
-export default Songs
+export default Songs;

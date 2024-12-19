@@ -51,21 +51,21 @@ const MyForm = () => {
   const navigation = useNavigation(); 
 
   useEffect(() => {
-    // Firebase Authentication state değişikliklerini izleyin
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setIsAuthenticated(true); // Kullanıcı giriş yaptı
-        navigation.navigate("Home"); // Giriş yaptıktan sonra ana sayfaya yönlendirin
+        setIsAuthenticated(true);
+        navigation.navigate("Home")
       } else {
-        setIsAuthenticated(false); // Kullanıcı çıkış yaptı
+        setIsAuthenticated(false)
       }
     });
 
-    return unsubscribe; // Temizleme işlemi
+    return unsubscribe; 
   }, [navigation]);
 
   const onSubmit = async (values) => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -73,18 +73,17 @@ const MyForm = () => {
         values.password
       );
       const user = userCredential.user;
-      console.log(user);
       setIsAuthenticated(true);
     } catch (error) {
       console.error(error.code, error.message);
-      setErrorMessage(error.message); // Set error message
+      setErrorMessage(error.message); 
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false); 
     }
   };
 
   const handleLogin = async (values) => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true)
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -92,14 +91,13 @@ const MyForm = () => {
         values.password
       );
       const user = userCredential.user;
-      console.log(user);
       setIsAuthenticated(true);
       navigation.navigate("Home");
     } catch (error) {
       console.error(error.code, error.message);
-      setErrorMessage(error.message); // Set error message
+      setErrorMessage(error.message); 
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
 
