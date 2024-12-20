@@ -17,6 +17,7 @@ import { Searchbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useAudio } from "../components/context/AudioContext";
 
+
 const width = Dimensions.get("window").width;
 
 const Songs = ({ navigation }) => {
@@ -28,13 +29,15 @@ const Songs = ({ navigation }) => {
     currentSong,
     currentCountdown,
   } = useAudio();
-  const [currentSongList, setCurrentSongList] = useState(null);
+  const [currentSongList, setCurrentSongList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSongs, setFilteredSongs] = useState(songs);
 
   const onChangeSearch = (query) => {
     setSearchQuery(query);
   };
+
+  // console.log("filteredSongs", filteredSongs)
 
   useEffect(() => {
     const backAction = () => {
@@ -68,13 +71,12 @@ const Songs = ({ navigation }) => {
   };
 
   const handleSongPress = (song) => {
-    setCurrentSongList(song);
-     console.log(currentSongList);
-     togglePlay(song.url, song.artist, song.song, song.duration);
+    navigation.goBack()
+    // setCurrentSongList(song);
+    // console.log("şarkılar", song)
+    //  console.log(song.url);
+    //   togglePlay(song.url, song.artist, song.song, song.duration);
   };
-
-   console.log("Audio file URL:", currentSongList
-   );
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSongPress(item)}>
@@ -127,6 +129,7 @@ const Songs = ({ navigation }) => {
       />
     </SafeAreaView>
   );
+
 };
 
 const styles = StyleSheet.create({

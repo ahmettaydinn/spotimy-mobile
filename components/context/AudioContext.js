@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { Audio } from "expo-av";
+import {MusicList } from "../../assets/music/MusicList"
 
 const AudioContext = createContext();
 
@@ -12,6 +13,14 @@ export const AudioProvider = ({ children }) => {
   const [currentSongDuration, setCurrentSongDuration] = useState(0);
   const [currentCountdown, setCurrentCountdown] = useState("00:00");
 
+  const [state, setState] = useState({
+    isPlaying: false,
+    currentSound: null,
+    currentSongUrl: null
+  })
+
+
+
   const togglePlay = async (url, artist, song, duration) => {
     try {
       if (currentSound) {
@@ -19,10 +28,13 @@ export const AudioProvider = ({ children }) => {
         setCurrentSound(null);
       }
 
+      console.log("url", url)
+
+
       if (currentSongUrl !== url) {
-        const { sound } = await Audio.Sound.createAsync({ uri: url });
+        const { sound } = await Audio.Sound.createAsync({uri: url} );
         setCurrentSound(sound);
-        setCurrentSongUrl(url);
+        setCurrentSongUrl(song);
         setCurrentArtist(artist);
         setCurrentSong(song);
         setCurrentSongDuration(duration);
@@ -43,10 +55,14 @@ export const AudioProvider = ({ children }) => {
   };
 
   console.log("currentSound:", currentSound);
-
+console.log("string", state)
   useEffect(() => {
+    setState({
+      ...state,
+      isplaying: true
+    })
     const updateCountdown = async () => {
-      if (currentSound && isPlaying) {
+      if (currentSound && state.isplaying ) {
         const status = await currentSound.getStatusAsync();
         if (status.isLoaded) {
           const remainingTime =
