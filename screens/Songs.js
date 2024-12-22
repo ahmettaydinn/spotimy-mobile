@@ -1,98 +1,217 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
-import database from "@react-native-firebase/database";
+import React, { useContext, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  BackHandler,
+  Alert,
+  Dimensions,
+  Button,
+} from "react-native";
+import { SongsContext } from "../components/context/SongsProvider";
+import { FlashList } from "@shopify/flash-list";
+import { Searchbar } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useAudio } from "../components/context/AudioContext";
 
-const Songs = () => {
-  const [songs, setSongs] = useState([]);
+
+const width = Dimensions.get("window").width;
+
+const Songs = ({ navigation }) => {
+  const { songs } = useContext(SongsContext);
+  const {
+    isPlaying,
+    togglePlay,
+    currentArtist,
+    currentSong,
+    currentCountdown,
+  } = useAudio();
+  const [currentSongList, setCurrentSongList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredSongs, setFilteredSongs] = useState(songs);
+
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  // console.log("filteredSongs", filteredSongs)
 
   useEffect(() => {
-    const reference = database().ref("/songs"); // songs path'i
+    const backAction = () => {
+      Alert.alert("Uyarı", "Geri tuşu devre dışı bırakıldı!", [
+        { text: "Tamam" },
+      ]);
+      return true;
+    };
 
-    console.log("Reference: ", database().ref("/songs"));
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
-    // Veriyi dinle
-    const onValueChange = reference.on("value", (snapshot) => {
-      const data = snapshot.val(); // snapshot'tan veri alın
-
-      if (data) {
-        // const songList = Object.values(data); // Objeyi diziye çevir
-        setSongs(data);
-      }
-    });
-
-    // Component unmount olduğunda dinleyiciyi kaldır
-    return () => reference.off("value", onValueChange);
+    return () => backHandler.remove();
   }, []);
-  // console.log("Firebase URL: ", database().ref().toString());
 
-  const renderItem = ({ item }) => {
-    console.log("item", item);
-    return (
+  useEffect(() => {
+    if (songs.length > 0) {
+      setCurrentSongList(songs[0]);
+      setFilteredSongs(
+        songs.filter((song) =>
+          song.song.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  }, [songs, searchQuery]);
+
+  const logout = () => {
+    navigation.navigate("Login");
+  };
+
+  const handleSongPress = (song) => {
+    navigation.goBack()
+    // setCurrentSongList(song);
+    // console.log("şarkılar", song)
+    //  console.log(song.url);
+    //   togglePlay(song.url, song.artist, song.song, song.duration);
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleSongPress(item)}>
       <View style={styles.item}>
+        <View>
+          <Text style={styles.id}>{item.id}</Text>
+        </View>
         <Image source={{ uri: item.songPhoto }} style={styles.image} />
         <View style={styles.details}>
           <Text style={styles.title}>{item.song}</Text>
           <Text style={styles.subtitle}>{item.artist}</Text>
-          <Text style={styles.info}>Genre: {item.genre}</Text>
-          <Text style={styles.info}>Duration: {item.duration}</Text>
-          <Text style={styles.info}>Release Date: {item.releaseDate}</Text>
         </View>
+        <Icon name="more-vert" size={30} color="white" style={styles.icon} />
       </View>
-    );
-  };
+    </TouchableOpacity>
+  );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Song List</Text>
-      <FlatList
-        data={songs}
-        keyExtractor={(item, index) => item.id.toString()}
-        renderItem={renderItem}
+    <SafeAreaView style={styles.container}>
+      {currentSongList && (
+        <View style={styles.mainImage}>
+          <Image
+            source={{ uri: currentSongList.songPhoto }}
+            style={{ width: width, height: 400, borderRadius: 10 }}
+          />
+        </View>
+      )}
+      {currentSongList && (
+        <View style={styles.overlay}>
+          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+            {currentSongList.song}
+          </Text>
+          <Text style={{ color: "white", fontSize: 14 }}>
+            {currentSongList.artist}
+          </Text>
+        </View>
+      )}
+      <Searchbar
+        placeholder="Search"
+        placeholderTextColor="white"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+        style={styles.searchbar}
       />
-    </View>
+      <FlashList
+        data={filteredSongs}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        estimatedItemSize={70}
+      />
+    </SafeAreaView>
   );
+
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "black",
+    padding: 0,
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
+  mainImage: {
+    position: "relative",
+    width: "100%",
+    height: 400,
+    overflow: "hidden",
+  },
+  overlay: {
+    position: "absolute",
+    top: 20,
+    left: 10,
+    right: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 10,
+    padding: 5,
+    zIndex: 10,
+  },
+  searchbar: {
     marginBottom: 20,
+    borderRadius: 8,
+    backgroundColor: "black",
+    color: "white",
   },
   item: {
     flexDirection: "row",
-    marginBottom: 20,
-    backgroundColor: "#fff",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "black",
     borderRadius: 10,
-    overflow: "hidden",
+    marginBottom: 10,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 3,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 45,
+    height: 45,
+    borderRadius: 10,
+    marginRight: 10,
   },
   details: {
     flex: 1,
-    padding: 10,
+    justifyContent: "center",
+  },
+  id: {
+    fontSize: 16,
+    color: "white",
+    textAlign: "center",
+    paddingRight: 10,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 5,
+    color: "#fff",
   },
   subtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 5,
-  },
-  info: {
     fontSize: 12,
-    color: "#888",
+    color: "#aaa",
+    marginTop: 5,
+  },
+  icon: {
+    alignSelf: "center",
+    marginLeft: 10,
+  },
+  logoutButton: {
+    position: "absolute",
+    bottom: 20,
+    left: "50%",
+    transform: [{ translateX: -50 }],
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
   },
 });
 

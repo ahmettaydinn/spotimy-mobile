@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -6,6 +6,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "@react-native-firebase/auth";
 import { useNavigation } from "@react-navigation/native"; 
 
@@ -49,8 +50,22 @@ const MyForm = () => {
   const [errorMessage, setErrorMessage] = useState(""); // Track error message
   const navigation = useNavigation(); 
 
+  useEffect(() => {
+    
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+        navigation.navigate("Home")
+      } else {
+        setIsAuthenticated(false)
+      }
+    });
+
+    return unsubscribe; 
+  }, [navigation]);
+
   const onSubmit = async (values) => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -58,18 +73,17 @@ const MyForm = () => {
         values.password
       );
       const user = userCredential.user;
-      console.log(user);
       setIsAuthenticated(true);
     } catch (error) {
       console.error(error.code, error.message);
-      setErrorMessage(error.message); // Set error message
+      setErrorMessage(error.message); 
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false); 
     }
   };
 
   const handleLogin = async (values) => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true)
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -77,14 +91,13 @@ const MyForm = () => {
         values.password
       );
       const user = userCredential.user;
-      console.log(user);
       setIsAuthenticated(true);
-      navigation.navigate("Songs");
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error.code, error.message);
-      setErrorMessage(error.message); // Set error message
+      setErrorMessage(error.message); 
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
 
