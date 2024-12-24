@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import {
@@ -8,7 +16,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "@react-native-firebase/auth";
-import { useNavigation } from "@react-navigation/native"; 
+import { useNavigation } from "@react-navigation/native";
 
 const auth = getAuth();
 
@@ -45,27 +53,26 @@ const LoginSchema = Yup.object().shape({
 
 const MyForm = () => {
   const [isRegister, setIsRegister] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth status
-  const [isLoading, setIsLoading] = useState(false); // Track loading state
-  const [errorMessage, setErrorMessage] = useState(""); // Track error message
-  const navigation = useNavigation(); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigation = useNavigation();
 
   useEffect(() => {
-    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsAuthenticated(true);
-        navigation.navigate("Home")
+        navigation.navigate("Home");
       } else {
-        setIsAuthenticated(false)
+        setIsAuthenticated(false);
       }
     });
 
-    return unsubscribe; 
+    return unsubscribe;
   }, [navigation]);
 
   const onSubmit = async (values) => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -76,14 +83,14 @@ const MyForm = () => {
       setIsAuthenticated(true);
     } catch (error) {
       console.error(error.code, error.message);
-      setErrorMessage(error.message); 
+      setErrorMessage(error.message);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
   const handleLogin = async (values) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -95,7 +102,7 @@ const MyForm = () => {
       navigation.navigate("Home");
     } catch (error) {
       console.error(error.code, error.message);
-      setErrorMessage(error.message); 
+      setErrorMessage(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -205,7 +212,9 @@ const MyForm = () => {
               <Button onPress={handleSubmit} title="Gönder" />
             )}
 
-            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+            {errorMessage ? (
+              <Text style={styles.error}>{errorMessage}</Text>
+            ) : null}
 
             <TouchableOpacity
               onPress={() => setIsRegister(!isRegister)}

@@ -77,9 +77,14 @@ const Songs = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSongPress(item)}>
       <View style={styles.item}>
-        <View>
-          <Text style={styles.id}>{item.id}</Text>
-        </View>
+        {isPlaying ? (
+          <Text>Button</Text>
+        ) : (
+          <View>
+            <Text style={styles.id}>{item.id}</Text>
+          </View>
+        )}
+
         <Image source={{ uri: item.songPhoto }} style={styles.image} />
         <View style={styles.details}>
           <Text style={styles.title}>{item.song}</Text>

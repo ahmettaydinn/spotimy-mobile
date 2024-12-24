@@ -21,24 +21,29 @@ export const AudioProvider = ({ children }) => {
     };
   }, [currentSound]);
 
+  useEffect(() => {
+    console.log("currentSongUrl updated:", currentSongUrl);
+  }, [currentSongUrl]); 
+  
+
   const togglePlay = async (url, artist, song, duration) => {
-    console.log("url", url);
+    
+    console.log("currentSongUrl", currentSongUrl);
 
     try {
- 
       if (currentSongUrl === url) {
+        console.log("eşit");
         if (isPlaying) {
+          console.log("durduruluyor");
           await currentSound.pauseAsync();
           setIsPlaying(false);
+          console.log("durduruluyor");
         } else {
           await currentSound.playAsync();
           setIsPlaying(true);
         }
         return;
       }
-
-      setCurrentSongUrl(url);
-      console.log("currentSongUrl", currentSongUrl);
 
       const { sound } = await Audio.Sound.createAsync({ uri: url });
       setCurrentSound(sound);
@@ -70,7 +75,10 @@ export const AudioProvider = ({ children }) => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   return (
