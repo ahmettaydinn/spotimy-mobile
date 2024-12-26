@@ -17,7 +17,6 @@ import { Searchbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useAudio } from "../components/context/AudioContext";
 
-
 const width = Dimensions.get("window").width;
 
 const Songs = ({ navigation }) => {
@@ -71,19 +70,21 @@ const Songs = ({ navigation }) => {
   };
 
   const handleSongPress = (song) => {
-    navigation.goBack()
-    // setCurrentSongList(song);
-    // console.log("şarkılar", song)
-    //  console.log(song.url);
-    //   togglePlay(song.url, song.artist, song.song, song.duration);
+    setCurrentSongList(song);
+    togglePlay(song.url, song.artist, song.song, song.duration);
   };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSongPress(item)}>
       <View style={styles.item}>
-        <View>
-          <Text style={styles.id}>{item.id}</Text>
-        </View>
+        {isPlaying ? (
+          <Text>Button</Text>
+        ) : (
+          <View>
+            <Text style={styles.id}>{item.id}</Text>
+          </View>
+        )}
+
         <Image source={{ uri: item.songPhoto }} style={styles.image} />
         <View style={styles.details}>
           <Text style={styles.title}>{item.song}</Text>
@@ -129,7 +130,6 @@ const Songs = ({ navigation }) => {
       />
     </SafeAreaView>
   );
-
 };
 
 const styles = StyleSheet.create({

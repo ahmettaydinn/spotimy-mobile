@@ -1,68 +1,63 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { Audio } from "expo-av";
-import {MusicList } from "../../assets/music/MusicList"
 
 const AudioContext = createContext();
 
 export const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSound, setCurrentSound] = useState(null);
-  const [currentSongUrl, setCurrentSongUrl] = useState(null);
+  const [currentSongUrl, setCurrentSongUrl] = useState("");
   const [currentArtist, setCurrentArtist] = useState("");
   const [currentSong, setCurrentSong] = useState("");
   const [currentSongDuration, setCurrentSongDuration] = useState(0);
   const [currentCountdown, setCurrentCountdown] = useState("00:00");
 
-  const [state, setState] = useState({
-    isPlaying: false,
-    currentSound: null,
-    currentSongUrl: null
-  })
-
-
-
-  const togglePlay = async (url, artist, song, duration) => {
-    try {
+  useEffect(() => {
+    return () => {
       if (currentSound) {
-        await currentSound.unloadAsync();
+        currentSound.unloadAsync();
         setCurrentSound(null);
       }
+    };
+  }, [currentSound]);
 
-      console.log("url", url)
+  useEffect(() => {
+    console.log("currentSongUrl updated:", currentSongUrl);
+  }, [currentSongUrl]); 
+  
 
+  const togglePlay = async (url, artist, song, duration) => {
+    
+    console.log("currentSongUrl", currentSongUrl);
 
-      if (currentSongUrl !== url) {
-        const { sound } = await Audio.Sound.createAsync({uri: url} );
-        setCurrentSound(sound);
-        setCurrentSongUrl(song);
-        setCurrentArtist(artist);
-        setCurrentSong(song);
-        setCurrentSongDuration(duration);
-        await sound.playAsync();
-        setIsPlaying(true);
-      } else {
+    try {
+      if (currentSongUrl === url) {
+        console.log("eşit");
         if (isPlaying) {
+          console.log("durduruluyor");
           await currentSound.pauseAsync();
           setIsPlaying(false);
+          console.log("durduruluyor");
         } else {
           await currentSound.playAsync();
           setIsPlaying(true);
         }
+        return;
       }
+
+      const { sound } = await Audio.Sound.createAsync({ uri: url });
+      setCurrentSound(sound);
+      setCurrentSongUrl(url);
+      await sound.playAsync();
+      setIsPlaying(true);
     } catch (error) {
-      console.error("Error handling audio:", error);
+      console.error("togglePlay sırasında bir hata oluştu:", error);
     }
   };
 
-  console.log("currentSound:", currentSound);
-console.log("string", state)
   useEffect(() => {
-    setState({
-      ...state,
-      isplaying: true
-    })
     const updateCountdown = async () => {
-      if (currentSound && state.isplaying ) {
+      if (currentSound && isPlaying) {
         const status = await currentSound.getStatusAsync();
         if (status.isLoaded) {
           const remainingTime =
@@ -73,6 +68,7 @@ console.log("string", state)
     };
 
     const interval = setInterval(updateCountdown, 1000);
+
     return () => clearInterval(interval);
   }, [isPlaying, currentSound]);
 
