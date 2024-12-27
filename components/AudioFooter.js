@@ -1,20 +1,39 @@
-import React from "react"
+import React, {useContext} from "react"
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"
 import AntDesignIcon from "react-native-vector-icons/AntDesign"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { SongsContext } from "../components/context/SongsProvider";
+import { useAudio } from "../components/context/AudioContext";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AudioFooter() {
+  const { songs } = useContext(SongsContext);
+  const {
+    isPlaying,
+    togglePlay,
+    currentSongPhoto,
+    currentArtist,
+    currentSong,
+    currentCountdown,
+  } = useAudio();
+  const navigation = useNavigation();
+
+  const openSongPlay = () => {
+    navigation.navigate("SongPlay");
+    console.log("play");
+  }
+
   return (
-    <View style={styles.footerContainer}>
+    <TouchableOpacity onPress={openSongPlay} style={styles.footerContainer}>
       <View style={styles.songInfoContainer}>
         <View style={styles.songDetails}>
           <Image
-            source={{ uri: "https://via.placeholder.com/50" }} 
+            source={{ uri: isPlaying ? currentSongPhoto : "https://via.placeholder.com/50"}} 
             style={styles.songImage}
           />
           <View style={styles.textContainer}>
-            <Text style={styles.songName}>Song Name</Text>
-            <Text style={styles.artistName}>Artist</Text>
+            <Text style={styles.songName}>{isPlaying ? currentSong : "Song"}</Text>
+            <Text style={styles.artistName}>{isPlaying ? currentArtist : "Artist"}</Text>
           </View>
         </View>
         <View style={styles.iconsContainer}>
@@ -27,9 +46,9 @@ export default function AudioFooter() {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={togglePlay}>
             <MaterialCommunityIcons
-              name="play"
+              name={isPlaying ? "pause" : "play"}
               size={35}
               color="white"
               style={styles.icon}
@@ -37,7 +56,7 @@ export default function AudioFooter() {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -48,7 +67,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
   },
   songInfoContainer: {
     flexDirection: "row",
@@ -85,4 +104,4 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 10,
   },
-})
+});

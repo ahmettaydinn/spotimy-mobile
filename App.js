@@ -5,6 +5,7 @@ import { SongsProvider } from "./components/context/SongsProvider"
 import { AudioProvider } from "./components/context/AudioContext"
 import Login from "./components/Login"
 import Songs from "./screens/Songs"
+import SongPlay from "./screens/SongPlay"
 import Home from "./screens/Home"
 import Details from "./screens/Details"
 import AudioFooter from "./components/AudioFooter"
@@ -22,10 +23,11 @@ export default function App() {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Songs" component={Songs} />
+            <Stack.Screen name="SongPlay" component={SongPlay} />
             <Stack.Screen name="Details" component={Details} />
           </Stack.Navigator>
-        </NavigationContainer>
         <AudioFooter />
+         </NavigationContainer>
       </SongsProvider>
     </AudioProvider>
   )

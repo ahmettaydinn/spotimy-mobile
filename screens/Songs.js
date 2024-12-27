@@ -71,7 +71,7 @@ const Songs = ({ navigation }) => {
 
   const handleSongPress = (song) => {
     setCurrentSongList(song);
-    togglePlay(song.url, song.artist, song.song, song.duration);
+    togglePlay(song.url, song.songPhoto, song.artist, song.song, song.duration);
   };
 
   const renderItem = ({ item }) => (
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 10,
     marginBottom: 10,
-    padding: 10,
+    padding: 1,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -177,7 +177,6 @@ const styles = StyleSheet.create({
   image: {
     width: 45,
     height: 45,
-    borderRadius: 10,
     marginRight: 10,
   },
   details: {
