@@ -5,8 +5,9 @@ import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { SongsContext } from "../components/context/SongsProvider";
 import { useAudio } from "../components/context/AudioContext";
+import Slider from "@react-native-community/slider";
 
-const SongPlay = () => {
+const SongPlay = ({navigation}) => {
   const { songs } = useContext(SongsContext);
   const {
     isPlaying,
@@ -17,10 +18,17 @@ const SongPlay = () => {
     currentSong,
     currentCountdown,
     currentSongDuration,
-    currentTime
+    currentTime,
   } = useAudio();
   const [progress, setProgress] = useState(0);
 
+  const handleProgressChange = (value) => {
+    setProgress(value);
+    if (currentSound) {
+      const newPosition = (value / 100) * currentSongDuration;
+      currentSound.setPositionAsync(newPosition * 1000); // Convert to milliseconds
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,23 +37,36 @@ const SongPlay = () => {
         setProgress(progress);
       }
     }, 500);
-  
+
     return () => clearInterval(interval);
   }, [currentTime, currentSongDuration]);
-       
 
+  const handleBackward = async () => {
+    if (currentSound) {
+      const status = await currentSound.getStatusAsync();
+      if (status.isLoaded) {
+        const newPosition = Math.max(0, status.positionMillis - 10000);
+        await currentSound.setPositionAsync(newPosition);
+      }
+    }
+  };
 
-  console.log("currentTime:", currentTime);
-  console.log("currentSongDuration:", currentSongDuration);
-  console.log("progress", progress)
-  
+  const handleForward = async () => {
+    if (currentSound) {
+      const status = await currentSound.getStatusAsync();
+      if (status.isLoaded) {
+        const newPosition = Math.min(status.durationMillis, status.positionMillis + 10000);
+        await currentSound.setPositionAsync(newPosition);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity>
-          <Icon name="arrow-back" size={24} color="white" />
+          <Icon onPress={() => navigation.goBack()} name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity>
           <Icon name="ellipsis-horizontal" size={24} color="white" />
@@ -64,7 +85,6 @@ const SongPlay = () => {
 
       {/* Controls */}
       <View style={styles.controls}>
-        {/* Heart and Share */}
         <View style={styles.iconRow}>
           <TouchableOpacity style={styles.iconButton}>
             <AntDesignIcon name="hearto" size={30} color="white" />
@@ -74,65 +94,77 @@ const SongPlay = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBar, { width: `${progress}%` }]} />
+          <Slider
+            minimumValue={0}
+            maximumValue={100}
+            value={progress}
+            onValueChange={handleProgressChange}
+            style={styles.progressBar}
+            minimumTrackTintColor="blue"
+            maximumTrackTintColor="red"
+            thumbTintColor="white"
+          />
         </View>
 
         {/* Playback Controls */}
         <View style={styles.playbackControls}>
           <TouchableOpacity style={styles.iconButton}>
-            <MaterialIcons name="shuffle" size={35} color="white" />
+            <MaterialIcons name="shuffle" size={40} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <MaterialIcons name="skip-previous" size={40} color="white" />
+          <TouchableOpacity style={styles.iconButton} onPress={handleBackward}>
+            <MaterialIcons name="skip-previous" size={45} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} onPress={togglePlay}>
-            <MaterialIcons name={isPlaying ? "pause" : "play-arrow"} size={50} color="white" />
+            <MaterialIcons name={isPlaying ? "pause" : "play-arrow"} size={60} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} onPress={handleForward}>
+            <MaterialIcons name="skip-next" size={45} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <MaterialIcons name="skip-next" size={40} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <MaterialIcons name="repeat" size={35} color="white" />
+            <MaterialIcons name="repeat" size={40} color="white" />
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#121212",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 10,
+    paddingBottom: 100
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
     paddingBottom: 20,
+    marginTop: 40
   },
   imageContainer: {
     alignItems: "center",
     marginVertical: 20,
   },
   image: {
-    width: 350,
-    height: 350,
+    width: 380,
+    height: 380,
     borderRadius: 10,
+    marginBottom: 15,
   },
   songTitle: {
     color: "#fff",
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "bold",
     marginTop: 15,
   },
   artistName: {
-    color: "#ccc",
-    fontSize: 24,
+    color: "#bbb",
+    fontSize: 22,
     marginTop: 10,
   },
   controls: {
@@ -145,29 +177,53 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   iconButton: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   progressBarContainer: {
     width: "100%",
-    height: 5,
-    backgroundColor: "#333",
-    borderRadius: 5,
+    height: 40,
     marginBottom: 30,
+    paddingHorizontal: 10,
+    justifyContent: "center",
   },
   progressBar: {
-    height: "100%",
-    backgroundColor: "#1DB954", // Custom color for progress bar
-    borderRadius: 5,
+    width: "100%",
+    height: 3,
+    borderRadius: 3,
+    backgroundColor: "#444",
   },
   playbackControls: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+    marginTop: 20,
+  },
+  playPauseButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: "#1DB954",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#1DB954",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+  },
+  playPauseIcon: {
+    color: "#fff",
+    fontSize: 35,
+  },
+  buttonIcon: {
+    marginHorizontal: 20,
+    color: "#fff",
   },
 });
+
+
 
 export default SongPlay;

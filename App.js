@@ -9,6 +9,7 @@ import SongPlay from "./screens/SongPlay"
 import Home from "./screens/Home"
 import Details from "./screens/Details"
 import AudioFooter from "./components/AudioFooter"
+import Footer from "./components/Footer"
 
 const Stack = createNativeStackNavigator()
 
@@ -18,7 +19,7 @@ export default function App() {
       <SongsProvider>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{
-                     headerShown: true
+                     headerShown: false
                   }} initialRouteName="Login">
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Login" component={Login} />
@@ -26,7 +27,8 @@ export default function App() {
             <Stack.Screen name="SongPlay" component={SongPlay} />
             <Stack.Screen name="Details" component={Details} />
           </Stack.Navigator>
-        <AudioFooter />
+        {/* <AudioFooter /> */}
+        {/* <Footer /> */}
          </NavigationContainer>
       </SongsProvider>
     </AudioProvider>
