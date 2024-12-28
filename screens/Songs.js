@@ -71,7 +71,7 @@ const Songs = ({ navigation }) => {
 
   const handleSongPress = (song) => {
     setCurrentSongList(song);
-    togglePlay(song.url, song.artist, song.song, song.duration);
+    togglePlay(song.url, song.songPhoto, song.artist, song.song, song.duration);
   };
 
   const renderItem = ({ item }) => (
@@ -101,7 +101,7 @@ const Songs = ({ navigation }) => {
         <View style={styles.mainImage}>
           <Image
             source={{ uri: currentSongList.songPhoto }}
-            style={{ width: width, height: 400, borderRadius: 10 }}
+            style={{ width: 300, height: 300, borderRadius: 3 }}
           />
         </View>
       )}
@@ -137,12 +137,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     padding: 0,
+    paddingTop: 50
   },
   mainImage: {
     position: "relative",
     width: "100%",
     height: 400,
     overflow: "hidden",
+    justifyContent: "center", // Centers the content vertically
+    alignItems: "center", // Centers the content horizontally
   },
   overlay: {
     position: "absolute",
@@ -167,7 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 10,
     marginBottom: 10,
-    padding: 10,
+    padding: 4,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -177,7 +180,6 @@ const styles = StyleSheet.create({
   image: {
     width: 45,
     height: 45,
-    borderRadius: 10,
     marginRight: 10,
   },
   details: {

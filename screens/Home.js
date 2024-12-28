@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#121212",
+    paddingTop: 50
   },
   carouselContainer: {
     justifyContent: "center",
