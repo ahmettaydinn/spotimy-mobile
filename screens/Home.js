@@ -201,17 +201,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   imageContainer: {
-    overflow: "hidden", // Resmin yuvarlak hatları için
-    position: "relative", // Gölgeyi ve metni yerleştirmek için
+    overflow: "hidden", 
+    position: "relative", 
   },
   overlay: {
-    position: "absolute", // Fotoğrafın üzerine yerleştirmek için
-    bottom: 10, // Alt kısıma yaklaşık konumlandırma
-    left: 10, // Soldan 10 birim
-    right: 10, // Sağdan 10 birim
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Siyah transparan arka plan
+    position: "absolute",
+    bottom: 10, 
+    left: 10, 
+    right: 10, 
+    backgroundColor: "rgba(0, 0, 0, 0.5)", 
     borderRadius: 10,
-    padding: 5, // Metni etrafında biraz boşluk bırakmak için
+    padding: 5, 
   },
   artistName: {
     fontSize: 14,
@@ -222,17 +222,17 @@ const styles = StyleSheet.create({
 
   songName: {
     fontSize: 12,
-    color: "#fff", // Beyaz metin rengi
+    color: "#fff", 
   },
   shadowEffect: {
-    shadowColor: "#000", // Siyah gölge rengi
+    shadowColor: "#000", 
     shadowOffset: {
-      width: 15, // Yatayda sağa kaydırıyoruz
-      height: 0, // Dikeyde kayma olmaması için
+      width: 15, 
+      height: 0, 
     },
-    shadowOpacity: 0.2, // Gölgenin opaklık seviyesi
-    shadowRadius: 15, // Gölgenin yayılma mesafesi arttırıldı
-    elevation: 10, // Android için elevasyon ekliyoruz
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+    elevation: 10, 
   },
   button: {
     padding: 20,

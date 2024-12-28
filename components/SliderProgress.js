@@ -57,15 +57,15 @@ export default function SliderProgress() {
 const styles = StyleSheet.create({
   progressBarContainer: {
     width: "100%",
-    position: "absolute",  // Footer'ın alt kısmına yerleştiriyoruz
-    bottom: 0,  // Tam en alta sabitliyoruz
+    position: "absolute", 
+    bottom: 0,  
     justifyContent: "center",
     marginHorizontal: 0,  
     paddingHorizontal: 0,  
-    marginBottom: 0,  // Alt boşluğu sıfırlıyoruz
+    marginBottom: 0,  
   },
   progressBar: {
     width: "100%",
-    height: 2,  // Slider'ı daha ince yapalım
+    height: 2,  
   },
 });

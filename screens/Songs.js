@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 400,
     overflow: "hidden",
-    justifyContent: "center", // Centers the content vertically
-    alignItems: "center", // Centers the content horizontally
+    justifyContent: "center", 
+    alignItems: "center", 
   },
   overlay: {
     position: "absolute",
