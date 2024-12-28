@@ -65,12 +65,12 @@ const styles = StyleSheet.create({
   footerContainer: {
     backgroundColor: "#333",
     flexDirection: "column", 
-    height: 55,  // Daha kompakt bir yükseklik
+    height: 55, 
     width: "100%",
     marginBottom: 0,
     borderRadius: 3,
-    paddingBottom: 0,  // Alt boşluğu kaldırıyoruz
-    position: "absolute",  // Footer'ı ekranın en altına sabitliyoruz
+    paddingBottom: 0, 
+    position: "absolute", 
     bottom: 76,
     left: 0
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   songImage: {
-    width: 45,  // Daha küçük görsel
+    width: 45,
     height: 45,
     borderRadius: 3,
     marginRight: 10
@@ -97,12 +97,12 @@ const styles = StyleSheet.create({
   },
   songName: {
     color: "white",
-    fontSize: 12,  // Daha küçük yazı
+    fontSize: 12, 
     fontWeight: "bold",
   },
   artistName: {
     color: "#b3b3b3",
-    fontSize: 10,  // Daha küçük yazı
+    fontSize: 10, 
   },
   iconsContainer: {
     flexDirection: "row",

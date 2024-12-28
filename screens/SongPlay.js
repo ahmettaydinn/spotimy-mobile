@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Text, View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { Text, Button, Dimensions, View, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import Slider from "@react-native-community/slider";
+import ActionSheet from "react-native-actions-sheet";
 import Icon from "react-native-vector-icons/Ionicons";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { SongsContext } from "../components/context/SongsProvider";
 import { useAudio } from "../components/context/AudioContext";
-import Slider from "@react-native-community/slider";
+import UseFetchSongLyrics from "../components/hooks/UseFetchSongLyrics";
 
-const SongPlay = ({navigation}) => {
+const { height } = Dimensions.get("window");
+
+export default function SongPlay({ navigation }) {
+  const actionSheetRef = useRef(null);
   const { songs } = useContext(SongsContext);
   const {
     isPlaying,
@@ -21,6 +26,16 @@ const SongPlay = ({navigation}) => {
     currentTime,
   } = useAudio();
   const [progress, setProgress] = useState(0);
+
+  const { lyrics, error: lyricsError, isLoading: lyricsLoading } = UseFetchSongLyrics(currentArtist, currentSong);
+
+  const openActionSheet = () => {
+    actionSheetRef.current?.show();
+  };
+
+  const closeSheet = () => {
+    actionSheetRef.current?.hide();
+  };
 
   const handleProgressChange = (value) => {
     setProgress(value);
@@ -63,17 +78,15 @@ const SongPlay = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Icon onPress={() => navigation.goBack()} name="arrow-back" size={24} color="white" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={openActionSheet}>
           <Icon name="ellipsis-horizontal" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
-      {/* Song Image */}
       <View style={styles.imageContainer}>
         <Image
           source={{ uri: isPlaying ? currentSongPhoto : "https://via.placeholder.com/200" }}
@@ -83,7 +96,6 @@ const SongPlay = ({navigation}) => {
         <Text style={styles.artistName}>{isPlaying ? currentArtist : "Artist"}</Text>
       </View>
 
-      {/* Controls */}
       <View style={styles.controls}>
         <View style={styles.iconRow}>
           <TouchableOpacity style={styles.iconButton}>
@@ -94,21 +106,17 @@ const SongPlay = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        {/* Progress Bar */}
-        <View style={styles.progressBarContainer}>
-          <Slider
-            minimumValue={0}
-            maximumValue={100}
-            value={progress}
-            onValueChange={handleProgressChange}
-            style={styles.progressBar}
-            minimumTrackTintColor="blue"
-            maximumTrackTintColor="red"
-            thumbTintColor="white"
-          />
-        </View>
+        <Slider
+          minimumValue={0}
+          maximumValue={100}
+          value={progress}
+          onValueChange={handleProgressChange}
+          style={styles.progressBar}
+          minimumTrackTintColor="blue"
+          maximumTrackTintColor="red"
+          thumbTintColor="white"
+        />
 
-        {/* Playback Controls */}
         <View style={styles.playbackControls}>
           <TouchableOpacity style={styles.iconButton}>
             <MaterialIcons name="shuffle" size={40} color="white" />
@@ -127,24 +135,50 @@ const SongPlay = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <TouchableOpacity style={styles.lyricsButton} onPress={openActionSheet}>
+  <MaterialIcons name="notes" size={24} color="white" />
+  <Text style={styles.lyricsButtonText}>Lyrics</Text>
+</TouchableOpacity>
+
+      <ActionSheet ref={actionSheetRef} containerStyle={styles.actionSheetContainer}>
+        <View style={styles.lyricsContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={closeSheet}>
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+          {lyricsLoading ? (
+            <Text style={styles.loadingText}>Loading lyrics...</Text>
+          ) : lyricsError ? (
+            <Text style={styles.errorText}>Could not fetch lyrics. Please try again later.</Text>
+          ) : (
+            <>
+              <Text style={styles.lyricsTitle}>Lyrics</Text>
+              <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <Text style={styles.lyricsText}>
+                  {lyrics || "No lyrics available for this song."}
+                </Text>
+              </ScrollView>
+            </>
+          )}
+        </View>
+      </ActionSheet>
     </View>
   );
-};
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#121212",
-    justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    paddingBottom: 100
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+    marginTop: 40,
     paddingBottom: 20,
-    marginTop: 40
   },
   imageContainer: {
     alignItems: "center",
@@ -160,12 +194,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 28,
     fontWeight: "bold",
-    marginTop: 15,
+    textAlign: "center",
   },
   artistName: {
     color: "#bbb",
     fontSize: 22,
-    marginTop: 10,
+    textAlign: "center",
   },
   controls: {
     flex: 1,
@@ -182,48 +216,88 @@ const styles = StyleSheet.create({
   iconButton: {
     marginHorizontal: 10,
   },
-  progressBarContainer: {
-    width: "100%",
-    height: 40,
-    marginBottom: 30,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-  },
   progressBar: {
-    width: "100%",
     height: 3,
-    borderRadius: 3,
-    backgroundColor: "#444",
+    width: "100%",
+    marginTop: 15,
   },
   playbackControls: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     width: "100%",
-    marginTop: 20,
+    paddingBottom: 50,
+    paddingTop: 40,
   },
-  playPauseButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#1DB954",
+  lyricsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+  },
+  lyricsButtonText: {
+    color: 'white',
+    fontSize: 18,
+    marginLeft: 10,  
+  },
+  actionSheetContainer: {
+    height: height,
+    backgroundColor: "white",
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#1DB954",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
   },
-  playPauseIcon: {
-    color: "#fff",
-    fontSize: 35,
+  closeButtonText: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  buttonIcon: {
-    marginHorizontal: 20,
-    color: "#fff",
+  lyricsContainer: {
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: 20,
+  },
+  lyricsTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    textAlign: "center",
+    color: "#32CD32",
+    marginVertical: 20,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  lyricsText: {
+    fontSize: 16,
+    color: "#333",
+    textAlign: "center",
+    lineHeight: 24,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: "#BBBBBB",
+    textAlign: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#FF5252",
+    textAlign: "center",
   },
 });
-
-
-
-export default SongPlay;
