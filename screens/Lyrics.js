@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#1DB954', // Buton rengini değiştirebilirsiniz
-    borderRadius: 5, // Buton kenarlarını yuvarlayabilirsiniz
+    backgroundColor: '#1DB954', 
+    borderRadius: 5, 
   },
 });

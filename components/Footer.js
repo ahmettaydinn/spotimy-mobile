@@ -40,10 +40,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        backgroundColor: '#000',  // Siyah arka plan
+        backgroundColor: '#000', 
         paddingVertical: 10,
         paddingHorizontal: 20,
-        position: 'absolute',  // Ekranın alt kısmına sabitlemek için
+        position: 'absolute',  
         bottom: 0,
         width: '100%',
     },
@@ -59,6 +59,5 @@ const styles = StyleSheet.create({
     iconLabel: {
         marginTop: 5,
         fontSize: 12,
-        color: 'white',  // Beyaz yazı rengi
-    },
+        color: 'white', 
 });

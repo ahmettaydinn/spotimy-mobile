@@ -65,9 +65,9 @@ const Home = ({ navigation }) => {
           pagingEnabled={true}
           mode="parallax"
           modeConfig={{
-            parallaxScrollingScale: 1, // Kenardaki öğelerin boyut farkını sıfırla
-            parallaxScrollingOffset: 0, // Kayma uzaklığını sıfırla
-            parallaxAdjacentItemScale: 0.9, // Yanlardaki öğeleri biraz küçült
+            parallaxScrollingScale: 1, 
+            parallaxScrollingOffset: 0, 
+            parallaxAdjacentItemScale: 0.9, 
           }}
           style={styles.carousel}
           renderItem={({ index }) => (
